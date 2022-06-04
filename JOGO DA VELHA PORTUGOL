@@ -1,0 +1,184 @@
+programa{
+
+//JOGO DA VELHA ALGORITMO
+
+// MARCOS ANTONIO SA DORTA
+  
+  caracter jogo[3][3]
+  inteiro linha, coluna, l, c
+  cadeia nome = "", nome1 = "", nome2 = ""
+	 
+  funcao iniciarJogo(){
+    para(l = 0; l < 3; l++){
+      para(c = 0; c < 3; c++)
+        jogo[l][c] = ' '
+    }
+  }
+
+  funcao impressao(){
+    escreva("\n\n 0   1    2\n\n")
+    para(l = 0; l < 3; l++){
+      para(c = 0; c < 3; c++){
+        escreva(" ", jogo[l][c])
+        se(c < 2)
+          escreva(" | ")
+        se(c == 2)
+          escreva("  ", l)
+      }
+      se(l < 2)
+        escreva("\n---+----+---")
+      escreva("\n")
+    }
+  }
+
+  funcao leitura(inteiro jogador){
+    faca{
+      faca{
+      	se(nome1 == "" e nome2 == ""){
+      		escreva("bem vindo ao jogo da velha :)"," \n ")
+      	escreva("escreva seu nome jogador O ")
+      	leia(nome1)
+      	escreva("escreva seu nome jogador X ")
+      	leia(nome2)
+      	}
+      	
+      	se(jogador == 1)
+      	nome = nome1
+      	
+      	senao
+      	nome = nome2
+   	     	
+        escreva("\nVez do Jogador ", nome , ", por favor, digite linha e coluna da posição desejada: ")
+        leia(linha, coluna)
+      }enquanto(linha < 0 ou linha > 2 ou coluna < 0 ou coluna > 2)
+    }enquanto(jogo[linha][coluna] != ' ')
+  }
+
+  funcao inteiro passarParaProximo(inteiro jogador){
+    se(jogador == 1)
+      jogador = 2
+    senao
+      jogador = 1
+    retorne jogador
+  }
+
+  funcao inteiro salvar(inteiro jogador){
+    se(jogador == 1)
+      jogo[linha][coluna] = '0'
+    senao
+      jogo[linha][coluna] = 'X'
+    retorne 1
+  }
+
+  funcao inteiro venceuL(caracter c){
+    para(l = 0; l < 3; l++){
+      se(jogo[l][0] == c e jogo[l][1] == c e jogo[l][2] == c)
+        retorne 1
+    }
+    retorne 0
+  }
+
+  funcao inteiro venceuLs(){
+    se(venceuL('0') == 1)
+      retorne 1 
+    se(venceuL('X') == 1)
+      retorne 2 
+    retorne 0 
+  }
+
+  funcao inteiro venceuC(caracter s){
+    para(c = 0; c < 3; c++){
+      se(jogo[0][c] == s e jogo[1][c] == s e jogo[2][c] == s)
+        retorne 1
+    }
+    retorne 0
+  }
+
+  funcao inteiro venceuCs(){
+    se(venceuC('0') == 1)
+      retorne 1
+    se(venceuC('X') == 1)
+      retorne 2
+    retorne 0 
+  }
+
+  funcao inteiro vencePelaDP(caracter s){
+    se(jogo[0][0] == s e jogo[1][1] == s e jogo[2][2] == s)
+      retorne 1
+    retorne 0
+  }
+
+  funcao inteiro venceuPelaDP(){
+    se(vencePelaDP('0') == 1)
+      retorne 1
+    se(vencePelaDP('X') == 1)
+      retorne 2
+    retorne 0
+  }
+
+  funcao inteiro vencePelaDS(caracter s){
+    se(jogo[0][2] == s e jogo[1][1] == s e jogo[2][0] == s)
+      retorne 1
+    retorne 0
+  }
+
+  funcao inteiro venceuPelaDS(){
+    se(vencePelaDS('0') == 1)
+      retorne 1
+    se(vencePelaDS('X') == 1)
+      retorne 2
+    retorne 0
+  }
+
+  funcao inteiro jogar(inteiro jogador, inteiro jogadas, inteiro ganhou){
+    faca{
+      impressao()
+      leitura(jogador) 
+      
+     
+      jogadas += salvar(jogador)
+      jogador = passarParaProximo(jogador)
+      
+      ganhou += venceuLs()
+      ganhou += venceuCs()
+      ganhou += venceuPelaDP()      
+      ganhou += venceuPelaDS()
+    }enquanto(ganhou == 0 e jogadas < 9)
+
+	se(jogadas > 9)
+	ganhou = 0
+	
+     retorne ganhou
+  }
+  
+  
+  funcao inicio(){
+
+    inteiro jogador, ganhou, jogadas, opcao
+
+    faca{
+      jogador = 1
+      ganhou = 0
+      jogadas = 0
+
+      iniciarJogo()
+  
+      ganhou = jogar(jogador, jogadas, ganhou)
+  
+      
+      impressao()
+      se(ganhou == 0)
+       escreva("\nVelha \n")
+  
+      se(ganhou == 1)
+        escreva("\n\tParabéns ", nome1 , ", você ganhou!\n\n")
+
+      se(ganhou == 2)
+        escreva("\n\tParabéns ", nome2 ,", você ganhou!\n\n")
+     
+  
+      escreva("aperte 1 para reiniciar: ")
+      leia(opcao)
+    }enquanto(opcao == 1)
+  }
+}
